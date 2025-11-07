@@ -19,9 +19,13 @@ public class Cell {
 
     List<GameObject> gameObjectsInTile = new ArrayList<>();
 
-    public Cell(int x, int y) {
+    protected Cell(int x, int y) {
         setX(x);
         setY(y);
+    }
+
+    public void addGameObject(GameObject gameObject) {
+        this.gameObjectsInTile.add(gameObject);
     }
 
 }

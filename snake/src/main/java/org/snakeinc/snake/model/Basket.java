@@ -2,6 +2,7 @@ package org.snakeinc.snake.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import lombok.Data;
 
 @Data
@@ -23,7 +24,10 @@ public class Basket {
     }
 
     public void addApple() {
-        apples.add(new Apple());
+        var random = new Random();
+        Cell cell = Grid.getInstance().getTile(random.nextInt(0, Grid.TILES_X), random.nextInt(0, Grid.TILES_Y));
+        Apple apple = AppleFactory.createAppleInCell(cell);
+        apples.add(apple);
     }
 
     public void removeApple(Apple apple) {

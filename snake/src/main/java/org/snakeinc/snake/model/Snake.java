@@ -10,7 +10,7 @@ public class Snake implements GameObject {
 
     public Snake() {
         body = new ArrayList<>();
-        Cell head = Grid.getInstance().getTile(5, 5);
+        Cell head = Grid.getInstance().getTile(1, 1);
         body.add(head);
         head.getGameObjectsInTile().add(this);
     }
@@ -62,6 +62,7 @@ public class Snake implements GameObject {
             }
         }
 
+        // The snake did not eat :
         newHead.getGameObjectsInTile().add(this);
         body.addFirst(newHead);
 

@@ -3,7 +3,7 @@ package org.snakeinc.snake.model;
 import lombok.Getter;
 
 @Getter
-public class Apple implements GameObject {
+public class Apple {
 
     private final Cell cell;
 

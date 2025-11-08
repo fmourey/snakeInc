@@ -5,7 +5,7 @@ import org.snakeinc.snake.GameParams;
 import org.snakeinc.snake.exception.OutOfPlayException;
 import org.snakeinc.snake.exception.SelfCollisionException;
 
-public class Snake implements GameObject {
+public class Snake {
 
     private final ArrayList<Cell> body;
 
@@ -13,7 +13,7 @@ public class Snake implements GameObject {
         body = new ArrayList<>();
         Cell head = Grid.getInstance().getTile(GameParams.SNAKE_DEFAULT_X, GameParams.SNAKE_DEFAULT_Y);
         body.add(head);
-        head.addGameObject(this);
+        head.addSnake(this);
     }
 
     public int getSize() {
@@ -26,7 +26,7 @@ public class Snake implements GameObject {
 
     public void eat(Apple apple) {
         body.addFirst(apple.getCell());
-        apple.getCell().getGameObjectsInTile().add(this);
+        apple.getCell().addSnake(this);
         Basket.getInstance().removeApple(apple);
     }
 
@@ -51,23 +51,21 @@ public class Snake implements GameObject {
         if (newHead == null) {
             throw new OutOfPlayException();
         }
-        if (newHead.gameObjectsInTile.contains(this)) {
+        if (newHead.containsASnake()) {
             throw new SelfCollisionException();
         }
 
-        // Eat apples :
-        for (GameObject gameObject : new ArrayList<>(newHead.getGameObjectsInTile())) {
-            if (gameObject instanceof Apple) {
-                this.eat((Apple) gameObject);
-                return;
-            }
+        // Eat apple :
+        if (newHead.containsAnApple()) {
+            this.eat(newHead.getApple());
+            return;
         }
 
         // The snake did not eat :
-        newHead.getGameObjectsInTile().add(this);
+        newHead.addSnake(this);
         body.addFirst(newHead);
 
-        body.getLast().getGameObjectsInTile().remove(this);
+        body.getLast().removeSnake();
         body.removeLast();
 
 

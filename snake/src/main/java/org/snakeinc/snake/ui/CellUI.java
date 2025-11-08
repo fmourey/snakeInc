@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import lombok.AllArgsConstructor;
 import org.snakeinc.snake.model.Apple;
-import org.snakeinc.snake.model.GameObject;
-import org.snakeinc.snake.model.Snake;
 import org.snakeinc.snake.model.Cell;
 
 @AllArgsConstructor
@@ -32,16 +30,16 @@ public class CellUI implements Drawable {
 
     @Override
     public void draw(Graphics g) {
-        for (GameObject object : cell.getGameObjectsInTile()) {
-            if (object instanceof Apple) {
-                g.setColor(Color.RED);
-                drawOval(g);
-            }
-            if (object instanceof Snake) {
-                g.setColor(Color.GREEN);
-                drawRectangle(g);
-            }
+
+        if (cell.containsAnApple()) {
+            g.setColor(Color.RED);
+            drawOval(g);
         }
+        if (cell.containsASnake()) {
+            g.setColor(Color.GREEN);
+            drawRectangle(g);
+        }
+
     }
 
 }

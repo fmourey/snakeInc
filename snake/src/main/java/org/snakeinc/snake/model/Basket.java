@@ -35,7 +35,7 @@ public class Basket {
     }
 
     public void removeApple(Apple apple) {
-        apple.getCell().gameObjectsInTile.remove(apple);
+        apple.getCell().removeApple();
         apples.remove(apple);
     }
 

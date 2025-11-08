@@ -4,7 +4,7 @@ public class AppleFactory {
 
     public static Apple createAppleInCell(Cell cell) {
         Apple apple = new Apple(cell);
-        cell.addGameObject(apple);
+        cell.addApple(apple);
         return apple;
     }
 

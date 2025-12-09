@@ -16,15 +16,15 @@ public class Cell {
     private int y;
 
     Snake snake;
-    Apple apple;
+    Food food;
 
     protected Cell(int x, int y) {
         setX(x);
         setY(y);
     }
 
-    public void addApple(Apple apple) {
-        this.apple = apple;
+    public void addFood(Food food) {
+        this.food = food;
     }
 
     public void addSnake(Snake snake) {
@@ -35,16 +35,25 @@ public class Cell {
         this.snake = null;
     }
 
-    public void removeApple() {
-        this.apple = null;
+    public void removeFood() {
+        this.food = null;
     }
 
     public boolean containsASnake() {
         return this.snake != null;
     }
     
-    public boolean containsAnApple() {
-        return this.apple != null;
+    public boolean containsFood() {
+        return this.food != null;
+    }
+
+    public Snake getSnake() {
+        return this.snake;
+    }
+
+    public Food getFood() {
+        return this.food;
     }
 
 }
+

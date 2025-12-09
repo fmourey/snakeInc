@@ -5,17 +5,17 @@ import java.util.Random;
 import lombok.Getter;
 
 @Getter
-public final class Apple implements Food {
-    private final boolean poisoned;
+public final class Broccoli implements Food {
+    private final boolean steamed;
     private static final Random random = new Random();
 
-    public Apple(boolean poisoned) {
-        this.poisoned = poisoned;
+    public Broccoli(boolean steamed) {
+        this.steamed = steamed;
     }
 
     @Override
     public Color getColor() {
-        return poisoned ? Color.MAGENTA : Color.RED;
+        return steamed ? new Color(0, 255, 0) : new Color(0, 100, 0);
     }
 
     @Override

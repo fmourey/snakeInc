@@ -6,7 +6,7 @@ import org.snakeinc.snake.GameParams;
 import org.snakeinc.snake.exception.OutOfPlayException;
 import org.snakeinc.snake.exception.SelfCollisionException;
 import org.snakeinc.snake.exception.DiedOfStarvationException;
-import org.snakeinc.snake.model.Direction;
+
 import org.snakeinc.snake.model.strategy.FoodPlacementStrategy;
 import org.snakeinc.snake.model.strategy.RandomStrategy;
 import org.snakeinc.snake.model.strategy.EasyStrategy;
@@ -24,14 +24,14 @@ public class Game {
 
     public Game() {
         grid = new Grid();
-        snake = switch (new Random().nextInt(0,300)) {
+        snake = switch (new Random().nextInt(0,3)) {
             case 0 -> new Anaconda(this::onFoodEaten, grid);
             case 1 -> new Python(this::onFoodEaten, grid);
             case 2 -> new BoaConstrictor(this::onFoodEaten, grid);
             default -> new Anaconda(this::onFoodEaten, grid);
         };
         
-        FoodPlacementStrategy strategy = switch (new Random().nextInt(0,300)) {
+        FoodPlacementStrategy strategy = switch (new Random().nextInt(0,3)) {
             case 0 -> new RandomStrategy();
             case 1 -> new EasyStrategy();
             case 2 -> new DifficultStrategy();

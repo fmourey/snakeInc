@@ -1,37 +1,50 @@
 package com.snakeinc.api.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import com.snakeinc.api.model.Player;
+import com.snakeinc.api.repository.PlayerRepository;
+import java.util.Optional;
 
 @Service
 public class PlayerService {
 
-    private final Map<Integer, PlayerResponse> players = new HashMap<>();
-    private final AtomicInteger idGenerator = new AtomicInteger(1);
+    private final PlayerRepository playerRepository;
+
+    public PlayerService(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     public PlayerResponse createPlayer(PlayerParams params) {
-        Integer id = idGenerator.getAndIncrement();
         String category = params.age < 25 ? "JUNIOR" : "SENIOR";
-        PlayerResponse player = new PlayerResponse(id, params.name, params.age, category, LocalDate.now());
-        players.put(id, player);
-        return player;
+        Player player = new Player(params.name, params.age, category, LocalDate.now());
+        Player savedPlayer = playerRepository.save(player);
+        return new PlayerResponse(savedPlayer.getId(), savedPlayer.getName(), savedPlayer.getAge(), 
+                                 savedPlayer.getCategory(), savedPlayer.getCreatedAt());
     }
 
 
     public PlayerResponse getPlayerById(int id) {
-        return players.get(id);
+        Optional<Player> player = playerRepository.findById(id);
+        if (player.isPresent()) {
+            Player p = player.get();
+            return new PlayerResponse(p.getId(), p.getName(), p.getAge(), p.getCategory(), p.getCreatedAt());
+        }
+        return null;
+    }
+
+    public PlayerResponse getPlayerByName(String name) {
+        Iterable<Player> allPlayers = playerRepository.findAll();
+        for (Player player : allPlayers) {
+            if (player.getName().equalsIgnoreCase(name)) {
+                return new PlayerResponse(player.getId(), player.getName(), player.getAge(), player.getCategory(), player.getCreatedAt());
+            }
+        }
+        throw new IllegalArgumentException("Player with name '" + name + "' not found");
     }
 
     public static class PlayerParams {

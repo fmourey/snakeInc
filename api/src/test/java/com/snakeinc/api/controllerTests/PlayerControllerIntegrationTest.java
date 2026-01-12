@@ -15,6 +15,7 @@ import com.snakeinc.api.service.PlayerService.PlayerResponse;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = ApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class PlayerControllerIntegrationTest {
 
     @Autowired
@@ -106,6 +107,42 @@ public class PlayerControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNull(response.getBody());
+    }
+
+    @Test
+    public void testGetPlayerByName() {
+        PlayerParams params = new PlayerParams();
+        params.name = "Bob Smith";
+        params.age = 35;
+
+        ResponseEntity<PlayerResponse> createResponse = restTemplate.postForEntity(
+            "/api/v1/players",
+            params,
+            PlayerResponse.class
+        );
+
+        assertEquals(HttpStatus.OK, createResponse.getStatusCode());
+
+        ResponseEntity<PlayerResponse> getResponse = restTemplate.getForEntity(
+            "/api/v1/players?name=Bob Smith",
+            PlayerResponse.class
+        );
+
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        assertNotNull(getResponse.getBody());
+        assertEquals("Bob Smith", getResponse.getBody().name());
+        assertEquals(35, getResponse.getBody().age());
+    }
+
+    @Test
+    public void testGetPlayerByNameNotFound() {
+        ResponseEntity<String> response = restTemplate.getForEntity(
+            "/api/v1/players?name=NonExistentPlayer",
+            String.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody().contains("not found"));
     }
 
 }

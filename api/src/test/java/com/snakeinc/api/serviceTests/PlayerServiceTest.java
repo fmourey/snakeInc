@@ -2,20 +2,30 @@ package com.snakeinc.api.serviceTests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+import com.snakeinc.api.model.Player;
+import com.snakeinc.api.repository.PlayerRepository;
 import com.snakeinc.api.service.PlayerService;
 import com.snakeinc.api.service.PlayerService.PlayerParams;
 import com.snakeinc.api.service.PlayerService.PlayerResponse;
+import java.time.LocalDate;
+import java.util.Optional;
 
 public class PlayerServiceTest {
     
     private PlayerService playerService;
+    
+    @Mock
+    private PlayerRepository playerRepository;
 
     @BeforeEach
     public void setUp() {
-        playerService = new PlayerService();
+        MockitoAnnotations.openMocks(this);
+        playerService = new PlayerService(playerRepository);
     }
 
     @Test
@@ -23,6 +33,10 @@ public class PlayerServiceTest {
         PlayerParams params = new PlayerParams();
         params.name = "John Doe";
         params.age = 30;
+
+        Player mockPlayer = new Player("John Doe", 30, "SENIOR", LocalDate.now());
+        mockPlayer.setId(1);
+        when(playerRepository.save(any(Player.class))).thenReturn(mockPlayer);
 
         PlayerResponse response = playerService.createPlayer(params);
 
@@ -32,6 +46,7 @@ public class PlayerServiceTest {
         assertEquals("SENIOR", response.category());
         assertNotNull(response.createdAt());
         assertEquals(1, response.id());
+        verify(playerRepository, times(1)).save(any(Player.class));
     }
 
     @Test
@@ -40,48 +55,40 @@ public class PlayerServiceTest {
         params.name = "Alice";
         params.age = 20;
 
+        Player mockPlayer = new Player("Alice", 20, "JUNIOR", LocalDate.now());
+        mockPlayer.setId(1);
+        when(playerRepository.save(any(Player.class))).thenReturn(mockPlayer);
+
         PlayerResponse response = playerService.createPlayer(params);
 
         assertEquals("JUNIOR", response.category());
+        verify(playerRepository, times(1)).save(any(Player.class));
     }
 
 
     @Test
     public void testGetPlayerById() {
-        PlayerParams params = new PlayerParams();
-        params.name = "Charlie";
-        params.age = 35;
+        Player mockPlayer = new Player("Charlie", 35, "SENIOR", LocalDate.now());
+        mockPlayer.setId(1);
+        when(playerRepository.findById(1)).thenReturn(Optional.of(mockPlayer));
 
-        PlayerResponse created = playerService.createPlayer(params);
-        PlayerResponse retrieved = playerService.getPlayerById(created.id());
+        PlayerResponse retrieved = playerService.getPlayerById(1);
 
         assertNotNull(retrieved);
-        assertEquals(created.name(), retrieved.name());
-        assertEquals(created.age(), retrieved.age());
-        assertEquals(created.id(), retrieved.id());
+        assertEquals("Charlie", retrieved.name());
+        assertEquals(35, retrieved.age());
+        assertEquals(1, retrieved.id());
+        verify(playerRepository, times(1)).findById(1);
     }
 
     @Test
     public void testGetPlayerByIdNotFound() {
+        when(playerRepository.findById(999)).thenReturn(Optional.empty());
+        
         PlayerResponse result = playerService.getPlayerById(999);
         assertNull(result);
-    }
-
-    @Test
-    public void testMultiplePlayersWithIncrementingIds() {
-        PlayerParams params1 = new PlayerParams();
-        params1.name = "Player1";
-        params1.age = 20;
-
-        PlayerParams params2 = new PlayerParams();
-        params2.name = "Player2";
-        params2.age = 30;
-
-        PlayerResponse response1 = playerService.createPlayer(params1);
-        PlayerResponse response2 = playerService.createPlayer(params2);
-
-        assertEquals(1, response1.id());
-        assertEquals(2, response2.id());
+        verify(playerRepository, times(1)).findById(999);
     }
 }
+
 

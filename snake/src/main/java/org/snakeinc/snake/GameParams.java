@@ -16,7 +16,7 @@ public class GameParams {
     public static final double MOVEMENT_PROBABILITY = 0.15;
 
     // Food factory probabilities
-    public static final double APPLE_PROBABILITY = 0.9;
-    public static final double POISONED_PROBABILITY = 0.0;
+    public static final double APPLE_PROBABILITY = 0.8;
+    public static final double POISONED_PROBABILITY = 0.1;
     public static final double STEAMED_PROBABILITY = 0.3;
 }

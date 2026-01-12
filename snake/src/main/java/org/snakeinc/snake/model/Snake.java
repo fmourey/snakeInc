@@ -5,8 +5,7 @@ import org.snakeinc.snake.GameParams;
 import org.snakeinc.snake.exception.DiedOfStarvationException;
 import org.snakeinc.snake.exception.OutOfPlayException;
 import org.snakeinc.snake.exception.SelfCollisionException;
-import org.snakeinc.snake.exception.DiedOfStarvationException;
-import org.snakeinc.snake.model.Direction;
+
 import org.snakeinc.snake.model.state.SnakeState;
 import org.snakeinc.snake.model.state.GoodHealth;
 
